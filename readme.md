@@ -17,3 +17,20 @@ There are situations that we have multiple JSONs, one per line (log lines for ex
 ```
 
 When you press "NVDA+shift+j" this plugin takes each line, formats and displays all elements as a list.
+
+The formatted text will be displaied as follows:
+
+```
+[
+    {
+        "datetime": "2022-03-10 21:04:05",
+        "level": "info",
+        "message": "user logged in"
+    },
+    {
+        "datetime": "2022-03-10 21:04:08",
+        "level": "error",
+        "message": "Database is down"
+    }
+]
+```
