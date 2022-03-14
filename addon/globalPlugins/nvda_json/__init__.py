@@ -15,6 +15,20 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         formatted_json = self.__format_json(parsed_json)
         ui.browseableMessage(formatted_json, 'Formatted JSON', False)
 
+    def script_format_multiple_jsons_from_selected_text_or_clipboard(self, gesture):
+        text = self.__get_text()
+        lines = filter(lambda line: line != '', map(lambda line: line.strip(), text.splitlines()))
+        parsed_jsons_list = []
+        for line in lines:
+            try:
+                parsed_jsons_list.append(json.loads(line))
+            except json.decoder.JSONDecodeError as error:
+                continue
+        if parsed_jsons_list == []:
+            ui.message('No JSONs to display')
+        formatted_json = self.__format_json(parsed_jsons_list)
+        ui.browseableMessage(formatted_json, 'Formatted JSONs', False)
+
     def __get_text(self):
         return self.__get_selected_text() or api.getClipData()
 
@@ -39,4 +53,5 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     __gestures = {
         'kb:nvda+j': 'format_json_from_selected_text_or_clipboard',
+        'kb:nvda+shift+j': 'format_multiple_jsons_from_selected_text_or_clipboard',
     }
