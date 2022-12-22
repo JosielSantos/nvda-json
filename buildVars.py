@@ -11,12 +11,12 @@ addon_info = {
         "addon_summary": _("NVDA JSON"),
         "addon_description": _("""JSON utilities for NVDA
 """),
-        "addon_version": "0.4",
+        "addon_version": "0.5",
         "addon_author": "Josiel Santos <josiel.lkp@gmail.com>",
         "addon_url": "https://github.com/JosielSantos/nvda-json",
         "addon_docFileName": "readme.html",
         "addon_minimumNVDAVersion": "2019.3.0",
-        "addon_lastTestedNVDAVersion": "2021.1",
+        "addon_lastTestedNVDAVersion": "2022.1",
         "addon_updateChannel": None,
 }
 
