@@ -16,20 +16,20 @@ jobs:
       - name: Obtain tag message
         uses: ericcornelissen/git-tag-annotation-action@v2
         id: tag-data
-      - name: Check differences to master branch
-        id: differences-to-master
+      - name: Check differences to main branch
+        id: differences-to-main
         run: |
-          if git diff origin/master --exit-code; then
+          if git diff origin/main --exit-code; then
             echo "::set-output name=changes_exist::false"
           else
             echo "::set-output name=changes_exist::true"
           fi
-      - name: abort if tag is not applied on top of master
-        if: ${{ steps.differences-to-master.outputs.changes_exist == 'true' }}
+      - name: abort if tag is not applied on top of main
+        if: ${{ steps.differences-to-main.outputs.changes_exist == 'true' }}
         uses: actions/github-script@v3
         with:
             script: |
-              core.setFailed('Releases can be generated only from commit on head of master branch')
+              core.setFailed('Releases can be generated only from commit on head of main branch')
       - name: install system dependencies
         run: sudo apt install gettext
       - name: Install python
