@@ -1,0 +1,57 @@
+name: NVDAJsonCI
+on:
+  push:
+    tags:
+      - "**"
+jobs:
+  Release_addon:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      # The next step is used to fix a small issue here to obtain the current tag message, which will be used as the release body. For more details
+      # see https://github.com/actions/checkout/issues/290
+      - name: make sure we have the correct tag information
+        run: git fetch --tags --force
+      - name: Obtain tag message
+        uses: ericcornelissen/git-tag-annotation-action@v2
+        id: tag-data
+      - name: Check differences to master branch
+        id: differences-to-master
+        run: |
+          if git diff origin/master --exit-code; then
+            echo "::set-output name=changes_exist::false"
+          else
+            echo "::set-output name=changes_exist::true"
+          fi
+      - name: abort if tag is not applied on top of master
+        if: ${{ steps.differences-to-master.outputs.changes_exist == 'true' }}
+        uses: actions/github-script@v3
+        with:
+            script: |
+              core.setFailed('Releases can be generated only from commit on head of master branch')
+      - name: install system dependencies
+        run: sudo apt install gettext
+      - name: Install python
+        uses: actions/setup-python@v4
+        with:
+          # it seems that x86 versions of python 3 are not available for linux install.
+          # In this addon context it is really not important, as packaging should not deppend on architecture versions
+          # However, for future NVDA related actions we might have to switch to windows runners
+          python-version: '3.7'
+      - name: install python dependencies
+        run: |
+          pip install scons
+          pip install markdown
+      - name: generate addon
+        run: |
+          rm -f *.nvda-addon || true
+          scons
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: '*.nvda-addon'
+          body: "${{ steps.tag-data.outputs.git-tag-annotation }}"
+          fail_on_unmatched_files: true
+          generate_release_notes: false
+      
