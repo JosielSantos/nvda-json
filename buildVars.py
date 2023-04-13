@@ -16,7 +16,7 @@ addon_info = {
         "addon_url": "https://github.com/JosielSantos/nvda-json",
         "addon_docFileName": "readme.html",
         "addon_minimumNVDAVersion": "2019.3.0",
-        "addon_lastTestedNVDAVersion": "2022.1",
+        "addon_lastTestedNVDAVersion": "2023.1",
         "addon_updateChannel": None,
 }
 
