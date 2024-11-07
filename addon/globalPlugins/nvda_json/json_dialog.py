@@ -94,8 +94,8 @@ class JsonDialog(wx.Dialog):
                 self.output.SetValue(self.__format_json(matches))
             else:
                 ui.message('No matches found')
-        except (json.decoder.JSONDecodeError, jsonpath_ng.exceptions.JsonPathParserError) as e:
-            ui.message(f'Error: {str(e)}')
+        except (jsonpath_ng.exceptions.JsonPathLexerError, jsonpath_ng.exceptions.JsonPathParserError) as e:
+            ui.message(f'JSONPath Expression Error: {str(e)}')
 
     def __format_json(self, parsed_json):
         return json.dumps(
