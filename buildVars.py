@@ -32,6 +32,7 @@ addon_info = {
         # URL for the add-on documentation support
         "addon_docFileName": "readme.html",
         # URL for the add-on repository where the source code can be found
+        "addon_url": "https://github.com/JosielSantos/nvda-json",
         "addon_sourceURL": "https://github.com/JosielSantos/nvda-json",
         # Documentation file name
         "addon_docFileName": "readme.html",
