@@ -48,6 +48,6 @@ The formatted text will be displaied as follows:
 * [ ] Interactive JSON through a UI
   * [x] Button to copy output to clipboard
   * [ ] JSON Filtering / transformation
-    * [ ] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
+    * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
     * [ ] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
     * [ ] Save filters / transformations to avoid typing (program and description)
