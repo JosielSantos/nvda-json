@@ -1,4 +1,5 @@
 import json
+import api
 import ui
 import wx
 
@@ -22,6 +23,9 @@ class JsonDialog(wx.Dialog):
         self.output = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
         jsonSizer.Add(outputLabel)
         jsonSizer.Add(self.output, 1, wx.EXPAND | wx.ALL, 5)
+        copyOutputButton = wx.Button(self, label="Copy output to clipboard")
+        copyOutputButton.Bind(wx.EVT_BUTTON, self.on_copy_output_click)
+        jsonSizer.Add(copyOutputButton, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
         mainSizer.Add(jsonSizer, 1, wx.EXPAND | wx.ALL, 5)
         self.SetSizer(mainSizer)
         self.Bind(wx.EVT_CHAR_HOOK, self.onKey)
@@ -34,6 +38,13 @@ class JsonDialog(wx.Dialog):
 
     def onClose(self, evt):
         self.Destroy()
+
+    def on_copy_output_click(self, event):
+        copied = api.copyToClip(self.output.GetValue())
+        if copied:
+            ui.message('Copied')
+        else:
+            ui.message('Error when copying')
 
     def parse_text(self, text, multi):
         if multi:
