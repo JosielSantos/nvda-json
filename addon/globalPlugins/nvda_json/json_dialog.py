@@ -83,14 +83,12 @@ class JsonDialog(wx.Dialog):
 
     def on_path_expression_enter(self, event):
         expression = self.pathExpression.GetValue().strip()
-        if expression == '$':
-            self.output.SetValue(self.parse_text(self.text, self.multi))
-            return
         try:
             jsonpath_expr = jsonpath_ng.ext.parse(expression)
             json_data = json.loads(self.parse_text(self.text, self.multi))
             matches = [match.value for match in jsonpath_expr.find(json_data)]
             if matches:
+                matches = matches[0] if len(matches) == 1 else matches
                 self.output.SetValue(self.__format_json(matches))
             else:
                 ui.message('No matches found')
