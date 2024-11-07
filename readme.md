@@ -34,3 +34,19 @@ The formatted text will be displaied as follows:
     }
 ]
 ```
+
+## Features (implemented and future)
+
+* [x] Parsing JSON from clipboard
+* [x] Parsing JSON from selected text (cursor)
+* [x] Parsing of multiple JSON strings (one per line)
+* [ ] Settings panel
+  * [ ] Configure scripts behaviour (take JSON only from selected text, only from clipboard or both (current))
+* [ ] Parsing JSON variants
+  * [x] Original JSON using Python's json module
+  * [ ] json5
+* [ ] Interactive JSON through a UI
+  * [ ] JSON Filtering / transformation
+    * [ ] With JSON Pointer ("/timestamp") (https://github.com/stefankoegl/python-json-pointer)
+    * [ ] With JQ (".timestamp") (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
+    * [ ] Save filters / transformations to avoid typing (program and description)
