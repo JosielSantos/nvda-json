@@ -108,6 +108,7 @@ class JsonDialog(wx.Dialog):
     def __format_json(self, parsed_json):
         return json.dumps(
             parsed_json,
+            ensure_ascii = False,
             indent=4,
             sort_keys=True
         )
