@@ -1,6 +1,7 @@
 import json
 
 import api
+import gui
 import ui
 
 import jsonpath_ng
@@ -14,7 +15,10 @@ class JsonDialog(wx.Dialog):
         self.multi = multi
         self.create_ui()
         self.originalText.SetValue(text)
-        self.output.SetValue(self.parse_text(self.text, self.multi))
+        self.set_output(self.parse_text(self.text, self.multi))
+
+    def set_output(self, output):
+        self.output.SetValue(output if output is not None else '')
 
     def create_ui(self):
         mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -65,21 +69,27 @@ class JsonDialog(wx.Dialog):
     def parse_text_single(self, text):
         try:
             parsed_json = json.loads(text)
+            return self.__format_json(parsed_json)
         except json.decoder.JSONDecodeError as error:
-            ui.message('Invalid JSON: %s' % error)
-        return self.__format_json(parsed_json)
+            return self.exit_with_error('Invalid JSON: %s' % error)
 
     def parse_text_multi(self, text):
         lines = filter(lambda line: line != '', map(lambda line: line.strip(), text.splitlines()))
         parsed_jsons_list = []
-        for line in lines:
+        for (line_number, line) in enumerate(lines):
             try:
                 parsed_jsons_list.append(json.loads(line))
             except json.decoder.JSONDecodeError as error:
-                continue
+                return self.exit_with_error('Invalid JSON at line %d: %s' % (line_number + 1, error))
         if parsed_jsons_list == []:
             ui.message('No JSONs to display')
         return self.__format_json(parsed_jsons_list)
+
+    def exit_with_error(self, message):
+        wx.CallAfter(
+            lambda: gui.messageBox(message, 'Error', wx.OK | wx.ICON_ERROR)
+        )
+        self.Destroy()
 
     def on_path_expression_enter(self, event):
         expression = self.pathExpression.GetValue().strip()
@@ -89,7 +99,7 @@ class JsonDialog(wx.Dialog):
             matches = [match.value for match in jsonpath_expr.find(json_data)]
             if matches:
                 matches = matches[0] if len(matches) == 1 else matches
-                self.output.SetValue(self.__format_json(matches))
+                self.set_output(self.__format_json(matches))
             else:
                 ui.message('No matches found')
         except (jsonpath_ng.exceptions.JsonPathLexerError, jsonpath_ng.exceptions.JsonPathParserError) as e:
