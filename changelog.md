@@ -3,6 +3,15 @@
 
 ### Bug Fixes
 
+* Error when importing dependent modules ([481a730](https://github.com/JosielSantos/nvda-json/commit/481a7307e178a0dd64ac16123878dfc4c9d7db24))
+
+
+
+#  (2024-11-08)
+
+
+### Bug Fixes
+
 * Handle JSON parsing errors ([#12](https://github.com/JosielSantos/nvda-json/issues/12)) ([a2a6adb](https://github.com/JosielSantos/nvda-json/commit/a2a6adbc3ac0b70fbd7d6acdf13f469f20af8644))
 
 
