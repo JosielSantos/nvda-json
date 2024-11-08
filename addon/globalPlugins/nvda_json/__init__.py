@@ -1,33 +1,41 @@
+import os
+import sys
+sys.path.append(os.path.dirname(__file__)+'../../modules')
+
 import api
 import globalPluginHandler
+import gui
 import textInfos
 import treeInterceptorHandler
 import ui
-import json
+from .json_dialog import JsonDialog
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
+    def __init__(self):
+        super(GlobalPlugin, self).__init__()
+        self.jsonDialog = None
+
+    def terminate(self):
+        try:
+            if self.jsonDialog is not None:
+                self.jsonDialog.Destroy()
+        except (AttributeError, RuntimeError):
+            pass
+
     def script_format_json_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
-        try:
-            parsed_json = json.loads(text)
-        except json.decoder.JSONDecodeError as error:
-            ui.message('Invalid JSON: %s' % error)
-        formatted_json = self.__format_json(parsed_json)
-        ui.browseableMessage(formatted_json, 'Formatted JSON', False)
+        self.show_dialog(text, False)
 
     def script_format_multiple_jsons_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
-        lines = filter(lambda line: line != '', map(lambda line: line.strip(), text.splitlines()))
-        parsed_jsons_list = []
-        for line in lines:
-            try:
-                parsed_jsons_list.append(json.loads(line))
-            except json.decoder.JSONDecodeError as error:
-                continue
-        if parsed_jsons_list == []:
-            ui.message('No JSONs to display')
-        formatted_json = self.__format_json(parsed_jsons_list)
-        ui.browseableMessage(formatted_json, 'Formatted JSONs', False)
+        self.show_dialog(text, True)
+
+    def show_dialog(self, text, multi):
+        self.jsonDialog = JsonDialog(gui.mainFrame, text, multi)
+        if not self.jsonDialog.IsShown():
+            gui.mainFrame.prePopup()
+            self.jsonDialog.Show()
+            gui.mainFrame.postPopup()
 
     def __get_text(self):
         return self.__get_selected_text() or api.getClipData()
@@ -46,9 +54,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             return ''
         else:
             return info.text
-
-    def __format_json(self, parsed_json):
-        return json.dumps(parsed_json, indent=4, sort_keys=True)
 
 
     __gestures = {
