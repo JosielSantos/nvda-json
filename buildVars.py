@@ -26,7 +26,7 @@ addon_info = {
         "addon_description": _("""JSON utilities for NVDA
 """),
         # version
-        "addon_version": "1.0.0",
+        "addon_version": "1.0.1",
         # Author(s)
         "addon_author": "Josiel Santos <josiel.lkp@gmail.com>",
         # URL for the add-on documentation support
