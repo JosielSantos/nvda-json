@@ -1,6 +1,10 @@
 import json
+
 import api
 import ui
+
+import jsonpath_ng
+import jsonpath_ng.ext
 import wx
 
 class JsonDialog(wx.Dialog):
@@ -19,6 +23,10 @@ class JsonDialog(wx.Dialog):
         self.originalText = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
         jsonSizer.Add(originalTextLabel)
         jsonSizer.Add(self.originalText, 1, wx.EXPAND | wx.ALL, 5)
+        pathExpressionLabel = wx.StaticText(self, label="Path Expression")
+        self.pathExpression = wx.TextCtrl(self, style=wx.TE_LEFT|wx.TE_PROCESS_ENTER )
+        jsonSizer.Add(pathExpressionLabel)
+        jsonSizer.Add(self.pathExpression, 0, wx.EXPAND | wx.ALL, 5)
         outputLabel = wx.StaticText(self, label="Output")
         self.output = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
         jsonSizer.Add(outputLabel)
@@ -29,6 +37,8 @@ class JsonDialog(wx.Dialog):
         mainSizer.Add(jsonSizer, 1, wx.EXPAND | wx.ALL, 5)
         self.SetSizer(mainSizer)
         self.Bind(wx.EVT_CHAR_HOOK, self.onKey)
+        self.pathExpression.Bind(wx.EVT_TEXT_ENTER, self.on_path_expression_enter)
+        self.pathExpression.SetWindowStyleFlag(wx.TE_PROCESS_ENTER)
 
     def onKey(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
@@ -70,6 +80,20 @@ class JsonDialog(wx.Dialog):
         if parsed_jsons_list == []:
             ui.message('No JSONs to display')
         return self.__format_json(parsed_jsons_list)
+
+    def on_path_expression_enter(self, event):
+        expression = self.pathExpression.GetValue().strip()
+        try:
+            jsonpath_expr = jsonpath_ng.ext.parse(expression)
+            json_data = json.loads(self.parse_text(self.text, self.multi))
+            matches = [match.value for match in jsonpath_expr.find(json_data)]
+            if matches:
+                matches = matches[0] if len(matches) == 1 else matches
+                self.output.SetValue(self.__format_json(matches))
+            else:
+                ui.message('No matches found')
+        except (jsonpath_ng.exceptions.JsonPathLexerError, jsonpath_ng.exceptions.JsonPathParserError) as e:
+            ui.message(f'JSONPath Expression Error: {str(e)}')
 
     def __format_json(self, parsed_json):
         return json.dumps(

@@ -35,6 +35,49 @@ The formatted text will be displaied as follows:
 ]
 ```
 
+### JSONPath
+
+Between the "original text" and the "output" is a "path expression" field.
+This field accepts a JSONPath expression.
+JSONPath is a syntax that allows filtering JSON items. You can write the
+expression and press enter to see the filtered result in the "output" field.
+
+You can learn JSONPath in the [documentation](https://goessner.net/articles/JsonPath/)
+
+Let's discover this feature by example.
+
+Given these JSON lines:
+
+```
+{"name": "Josiel", "gender": "male", "birth_date": "1995-07-03"}
+{"name": "Luzia", "gender": "female", "birth_date": "1945-03-19"}
+{"name": "PH", "gender": "male", "birth_date": "2004-03-18"}
+```
+
+#### Get all people names
+
+```
+$..name
+```
+
+#### Get only male people
+
+```
+$[?(@.gender == 'male')]
+```
+
+#### Get only young people (born before year 2000)
+
+```
+$[?(@.birth_date > '2000-01-01')]
+```
+
+#### Get the original JSON
+
+```
+$
+```
+
 ## Features (implemented and future)
 
 * [x] Parsing JSON from clipboard
@@ -48,6 +91,6 @@ The formatted text will be displaied as follows:
 * [ ] Interactive JSON through a UI
   * [x] Button to copy output to clipboard
   * [ ] JSON Filtering / transformation
-    * [ ] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
+    * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
     * [ ] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
     * [ ] Save filters / transformations to avoid typing (program and description)

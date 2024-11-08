@@ -1,3 +1,7 @@
+import os
+import sys
+sys.path.append(os.path.dirname(__file__)+'../../modules')
+
 import api
 import globalPluginHandler
 import gui
