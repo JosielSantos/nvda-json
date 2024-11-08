@@ -3,6 +3,15 @@
 
 ### Bug Fixes
 
+* Correctly show accents in output ([f3fc3ea](https://github.com/JosielSantos/nvda-json/commit/f3fc3ea40f769af863bc1c03786167170b0d392f))
+
+
+
+#  (2024-11-08)
+
+
+### Bug Fixes
+
 * Error when importing dependent modules ([481a730](https://github.com/JosielSantos/nvda-json/commit/481a7307e178a0dd64ac16123878dfc4c9d7db24))
 
 
