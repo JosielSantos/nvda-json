@@ -34,7 +34,8 @@ class JsonTemplateDialog(JsonManipulatorDialog):
                     try:
                         value = jsonpointer.resolve_pointer(data, pointer)
                         result += str(value)
-                    except jsonpointer.JsonPointerException:
+                    except jsonpointer.JsonPointerException as e:
+                        ui.message(f'JSONPointer Expression Error: {str(e)}')
                         result += '{' + pointer + '}'
                     i = end_index + 1
                     continue
