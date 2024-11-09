@@ -4,6 +4,12 @@ on:
   push:
     branches-ignore:
       - main
+    paths-ignore:
+      - ".github/"
+      - ".addon/modules/"
+      - ".vscode/"
+      - "changelog.md"
+      - "readme.md"
 
 jobs:
   generate_changelog:
