@@ -8,33 +8,54 @@ import gui
 import textInfos
 import treeInterceptorHandler
 import ui
-from .json_dialog import JsonDialog
+import wx
+
+from .json_query_dialog import JsonQueryDialog
+from .json_template_dialog import JsonTemplateDialog
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def __init__(self):
         super(GlobalPlugin, self).__init__()
-        self.jsonDialog = None
+        self.dialogs = []
+        self.setupMenu()
+
+    def setupMenu(self):
+        self.menu = wx.Menu()
+        tools_menu = gui.mainFrame.sysTrayIcon.toolsMenu
+        for item in self.__features:
+            menu_item = self.menu.Append(wx.ID_ANY, item['title'], item['description'])
+            item_handler = getattr(self, ('script_' + item['script']))
+            gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, item_handler, menu_item)
+        self.json_menu = tools_menu.AppendSubMenu(self.menu, "JSON", "NVDA JSON")
 
     def terminate(self):
+        for dialog in self.dialogs:
+            self.destroy_dialog(dialog)
+
+    def destroy_dialog(self, dialog):
         try:
-            if self.jsonDialog is not None:
-                self.jsonDialog.Destroy()
+            if dialog is not None:
+                dialog.Destroy()
         except (AttributeError, RuntimeError):
             pass
 
     def script_format_json_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
-        self.show_dialog(text, False)
+        self.show_dialog(JsonQueryDialog(gui.mainFrame, text, False))
 
     def script_format_multiple_jsons_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
-        self.show_dialog(text, True)
+        self.show_dialog(JsonQueryDialog(gui.mainFrame, text, True))
 
-    def show_dialog(self, text, multi):
-        self.jsonDialog = JsonDialog(gui.mainFrame, text, multi)
-        if not self.jsonDialog.IsShown():
+    def script_json_template(self, gesture):
+        text = self.__get_text()
+        self.show_dialog(JsonTemplateDialog(gui.mainFrame, text))
+
+    def show_dialog(self, dialog):
+        self.dialogs.append(dialog)
+        if not dialog.IsShown():
             gui.mainFrame.prePopup()
-            self.jsonDialog.Show()
+            dialog.Show()
             gui.mainFrame.postPopup()
 
     def __get_text(self):
@@ -55,8 +76,28 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         else:
             return info.text
 
-
+    __features = [
+        {
+            'title': 'Query and format single JSON entry',
+            'description': 'Parse a single JSON entry',
+            'shortcut': 'kb:nvda+j',
+            'script': 'format_json_from_selected_text_or_clipboard',
+        },
+        {
+            'title': 'Query and format multiple JSON entries',
+            'description': 'Parses multiple JSON strings (onne per line)',
+            'shortcut': 'kb:nvda+shift+j',
+            'script': 'format_multiple_jsons_from_selected_text_or_clipboard',
+        },
+        {
+            'title': 'String transformation with JSONPointer',
+            'description': 'Create strings using JSONPointer syntax',
+            'shortcut': 'kb:nvda+control+j',
+            'script': 'json_template',
+        },
+    ]
     __gestures = {
-        'kb:nvda+j': 'format_json_from_selected_text_or_clipboard',
-        'kb:nvda+shift+j': 'format_multiple_jsons_from_selected_text_or_clipboard',
+        feature['shortcut']: feature['script']
+        for feature in __features
+        if feature.get('shortcut') is not None
     }
