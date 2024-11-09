@@ -6,10 +6,9 @@ import ui
 import wx
 
 class Dialog(wx.Dialog):
-    def __init__(self, parent, text, multi):
-        super(Dialog, self).__init__(parent, title="NVDA JSON")
+    def __init__(self, parent, text, title = 'NVDA JSON'):
+        super(Dialog, self).__init__(parent, title = title)
         self.text = text
-        self.multi = multi
         self.create_ui()
 
     def onKey(self, event):

@@ -11,11 +11,12 @@ import ui
 import wx
 
 from .json_query_dialog import JsonQueryDialog
+from .json_template_dialog import JsonTemplateDialog
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def __init__(self):
         super(GlobalPlugin, self).__init__()
-        self.jsonQueryDialog = None
+        self.dialogs = []
         self.setupMenu()
 
     def setupMenu(self):
@@ -28,25 +29,33 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.json_menu = tools_menu.AppendSubMenu(self.menu, "JSON", "NVDA JSON")
 
     def terminate(self):
+        for dialog in self.dialogs:
+            self.destroy_dialog(dialog)
+
+    def destroy_dialog(self, dialog):
         try:
-            if self.jsonQueryDialog is not None:
-                self.jsonQueryDialog.Destroy()
+            if dialog is not None:
+                dialog.Destroy()
         except (AttributeError, RuntimeError):
             pass
 
     def script_format_json_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
-        self.show_dialog(text, False)
+        self.show_dialog(JsonQueryDialog(gui.mainFrame, text, False))
 
     def script_format_multiple_jsons_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
-        self.show_dialog(text, True)
+        self.show_dialog(JsonQueryDialog(gui.mainFrame, text, True))
 
-    def show_dialog(self, text, multi):
-        self.jsonQueryDialog = JsonQueryDialog(gui.mainFrame, text, multi)
-        if not self.jsonQueryDialog.IsShown():
+    def script_json_template(self, gesture):
+        text = self.__get_text()
+        self.show_dialog(JsonTemplateDialog(gui.mainFrame, text))
+
+    def show_dialog(self, dialog):
+        self.dialogs.append(dialog)
+        if not dialog.IsShown():
             gui.mainFrame.prePopup()
-            self.jsonQueryDialog.Show()
+            dialog.Show()
             gui.mainFrame.postPopup()
 
     def __get_text(self):
@@ -69,16 +78,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     __features = [
         {
-            'shortcut': 'kb:nvda+j',
-            'script': 'format_json_from_selected_text_or_clipboard',
             'title': 'Query and format single JSON entry',
             'description': 'Parse a single JSON entry',
+            'shortcut': 'kb:nvda+j',
+            'script': 'format_json_from_selected_text_or_clipboard',
         },
         {
-            'shortcut': 'kb:nvda+shift+j',
-            'script': 'format_multiple_jsons_from_selected_text_or_clipboard',
             'title': 'Query and format multiple JSON entries',
             'description': 'Parses multiple JSON strings (onne per line)',
+            'shortcut': 'kb:nvda+shift+j',
+            'script': 'format_multiple_jsons_from_selected_text_or_clipboard',
+        },
+        {
+            'title': 'String transformation with JSONPointer',
+            'description': 'Create strings using JSONPointer syntax',
+            'shortcut': 'kb:nvda+control+j',
+            'script': 'json_template',
         },
     ]
     __gestures = {

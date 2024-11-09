@@ -11,7 +11,8 @@ from .abstract import Dialog as AbstractDialog
 
 class JsonQueryDialog(AbstractDialog):
     def __init__(self, parent, text, multi):
-        super(JsonQueryDialog, self).__init__(parent, text, multi)
+        super(JsonQueryDialog, self).__init__(parent, text, title = 'JSON Query')
+        self.multi = multi
         self.originalText.SetValue(text)
         self.set_output(self.parse_text(self.text, self.multi))
 
@@ -40,7 +41,6 @@ class JsonQueryDialog(AbstractDialog):
         self.SetSizer(mainSizer)
         self.Bind(wx.EVT_CHAR_HOOK, self.onKey)
         self.pathExpression.Bind(wx.EVT_TEXT_ENTER, self.on_path_expression_enter)
-        self.pathExpression.SetWindowStyleFlag(wx.TE_PROCESS_ENTER)
 
     def on_copy_output_click(self, event):
         copied = api.copyToClip(self.output.GetValue())
