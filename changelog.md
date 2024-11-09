@@ -1,5 +1,14 @@
 #  (2024-11-09)
 
+
+### Bug Fixes
+
+* Show JSONPointer error ([d3a7b38](https://github.com/JosielSantos/nvda-json/commit/d3a7b38af5689a0848e250213c3472eb9875e32c))
+
+
+
+#  (2024-11-09)
+
 ### Features
 
 * Add addon submenu on 'NVDA>tools' menu ([#16](https://github.com/JosielSantos/nvda-json/issues/16)) ([ed97a7f](https://github.com/JosielSantos/nvda-json/commit/ed97a7f6850ab78054e8132c605ee84ca8043584))
