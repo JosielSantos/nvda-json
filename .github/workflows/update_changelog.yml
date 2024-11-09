@@ -4,6 +4,9 @@ on:
   push:
     branches-ignore:
       - main
+    paths-ignore:
+      - "changelog.md"
+      - "readme.md"
 
 jobs:
   generate_changelog:
