@@ -1,24 +1,57 @@
 import json
 
+import api
 import gui
 import ui
 
 import wx
 
-class Dialog(wx.Dialog):
+class JsonManipulatorDialog(wx.Dialog):
+    label_manipulation_expression = None
+
     def __init__(self, parent, text, title = 'NVDA JSON'):
-        super(Dialog, self).__init__(parent, title = title)
+        super(JsonManipulatorDialog, self).__init__(parent, title = title)
         self.text = text
         self.create_ui()
+        self.original_text.SetValue(text)
 
-    def onKey(self, event):
+    def create_ui(self):
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        json_sizer = wx.BoxSizer(wx.VERTICAL)
+        label_original_text = wx.StaticText(self, label = 'Original text')
+        self.original_text = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        json_sizer.Add(label_original_text)
+        json_sizer.Add(self.original_text, 1, wx.EXPAND | wx.ALL, 5)
+        self.label_manipulation_expression = wx.StaticText(self)
+        self.manipulation_expression = wx.TextCtrl(self, style=wx.TE_LEFT|wx.TE_PROCESS_ENTER )
+        json_sizer.Add(self.label_manipulation_expression)
+        json_sizer.Add(self.manipulation_expression, 0, wx.EXPAND | wx.ALL, 5)
+        label_output = wx.StaticText(self, label='Output')
+        self.output = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        json_sizer.Add(label_output)
+        json_sizer.Add(self.output, 1, wx.EXPAND | wx.ALL, 5)
+        copy_output_button = wx.Button(self, label='Copy output to clipboard')
+        copy_output_button.Bind(wx.EVT_BUTTON, self.on_copy_output_click)
+        json_sizer.Add(copy_output_button, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
+        main_sizer.Add(json_sizer, 1, wx.EXPAND | wx.ALL, 5)
+        self.SetSizer(main_sizer)
+        self.Bind(wx.EVT_CHAR_HOOK, self.on_key)
+        self.manipulation_expression.Bind(wx.EVT_TEXT_ENTER, self.manipulate)
+
+    def on_copy_output_click(self, event):
+        copied = api.copyToClip(self.output.GetValue())
+        if copied:
+            ui.message('Copied')
+        else:
+            ui.message('Error when copying')
+    def on_key(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
             self.Close()
         else:
             event.Skip()
 
-    def onClose(self, evt):
-        self.Destroy()
+    def set_output(self, output):
+        self.output.SetValue(output if output is not None else '')
 
     def parse_text(self, text, multi):
         if multi:
@@ -58,3 +91,6 @@ class Dialog(wx.Dialog):
             indent=4,
             sort_keys=True
         )
+
+    def onClose(self, evt):
+        self.Destroy()

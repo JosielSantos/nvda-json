@@ -1,55 +1,22 @@
 import json
 
-import api
 import ui
 
 import jsonpointer
 import wx
 
-from .abstract import Dialog as AbstractDialog
+from .abstract import JsonManipulatorDialog
 
-class JsonTemplateDialog(AbstractDialog):
+class JsonTemplateDialog(JsonManipulatorDialog):
     def __init__(self, parent, text):
         super(JsonTemplateDialog, self).__init__(parent, text, title = 'JSON template')
-        self.originalText.SetValue(text)
+        self.label_manipulation_expression.SetLabel('Template')
+        self.original_text.SetValue(text)
 
-    def set_output(self, output):
-        self.output.SetValue(output if output is not None else '')
-
-    def create_ui(self):
-        mainSizer = wx.BoxSizer(wx.VERTICAL)
-        jsonSizer = wx.BoxSizer(wx.VERTICAL)
-        originalTextLabel = wx.StaticText(self, label = "Original text")
-        self.originalText = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
-        jsonSizer.Add(originalTextLabel)
-        jsonSizer.Add(self.originalText, 1, wx.EXPAND | wx.ALL, 5)
-        templateLabel = wx.StaticText(self, label="Template")
-        self.template = wx.TextCtrl(self, style=wx.TE_LEFT|wx.TE_PROCESS_ENTER )
-        jsonSizer.Add(templateLabel)
-        jsonSizer.Add(self.template, 0, wx.EXPAND | wx.ALL, 5)
-        outputLabel = wx.StaticText(self, label="Output")
-        self.output = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
-        jsonSizer.Add(outputLabel)
-        jsonSizer.Add(self.output, 1, wx.EXPAND | wx.ALL, 5)
-        copyOutputButton = wx.Button(self, label="Copy output to clipboard")
-        copyOutputButton.Bind(wx.EVT_BUTTON, self.on_copy_output_click)
-        jsonSizer.Add(copyOutputButton, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
-        mainSizer.Add(jsonSizer, 1, wx.EXPAND | wx.ALL, 5)
-        self.SetSizer(mainSizer)
-        self.Bind(wx.EVT_CHAR_HOOK, self.onKey)
-        self.template.Bind(wx.EVT_TEXT_ENTER, self.on_template_enter)
-
-    def on_copy_output_click(self, event):
-        copied = api.copyToClip(self.output.GetValue())
-        if copied:
-            ui.message('Copied')
-        else:
-            ui.message('Error when copying')
-
-    def on_template_enter(self, event):
-        template = self.template.GetValue().strip()
-        json_data = json.loads(self.parse_text(self.text, False))
-        self.set_output(self.parse_template(json_data, template))
+    def manipulate(self, event):
+        template = self.manipulation_expression.GetValue().strip()
+        data = json.loads(self.parse_text(self.text, False))
+        self.set_output(self.parse_template(data, template))
 
     def parse_template(self, data, template):
         result = ''
