@@ -78,6 +78,34 @@ $[?(@.birth_date > '2000-01-01')]
 $
 ```
 
+### String transformation with JSONPointer (NVDA+ctrl+j)
+
+Original idea from @thgcode in [this issue](https://github.com/JosielSantos/nvda-json/issues/6)
+
+Given this JSON:
+
+```
+{
+    "name": "Josiel",
+    "family": {
+        "mother": {"name": "Maria"}
+    },
+    "programming_languages": ["Java", "PHP"]
+}
+```
+
+With this functionality you can create strings using placeholders with JSONPointer syntax:
+
+```
+My name is {/name}, My mother is {/family/mother/name} and my favorite programming language is {/programming_languages/1}
+```
+
+Output:
+
+```
+My name is Josiel, My mother is Maria and my favorite programming language is PHP
+```
+
 ## Features (implemented and future)
 
 * [x] Parsing JSON from clipboard
@@ -94,3 +122,4 @@ $
     * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
     * [ ] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
     * [ ] Save filters / transformations to avoid typing (program and description)
+    * [x] String transformation using JSONPointer (https://datatracker.ietf.org/doc/html/rfc6901, https://github.com/stefankoegl/python-json-pointer?tab=readme-ov-file)
