@@ -10,12 +10,12 @@ import treeInterceptorHandler
 import ui
 import wx
 
-from .json_dialog import JsonDialog
+from .json_query_dialog import JsonQueryDialog
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def __init__(self):
         super(GlobalPlugin, self).__init__()
-        self.jsonDialog = None
+        self.jsonQueryDialog = None
         self.setupMenu()
 
     def setupMenu(self):
@@ -29,8 +29,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def terminate(self):
         try:
-            if self.jsonDialog is not None:
-                self.jsonDialog.Destroy()
+            if self.jsonQueryDialog is not None:
+                self.jsonQueryDialog.Destroy()
         except (AttributeError, RuntimeError):
             pass
 
@@ -43,10 +43,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.show_dialog(text, True)
 
     def show_dialog(self, text, multi):
-        self.jsonDialog = JsonDialog(gui.mainFrame, text, multi)
-        if not self.jsonDialog.IsShown():
+        self.jsonQueryDialog = JsonQueryDialog(gui.mainFrame, text, multi)
+        if not self.jsonQueryDialog.IsShown():
             gui.mainFrame.prePopup()
-            self.jsonDialog.Show()
+            self.jsonQueryDialog.Show()
             gui.mainFrame.postPopup()
 
     def __get_text(self):
