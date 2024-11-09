@@ -31,6 +31,11 @@ jobs:
       - name: Generate changelog
         run: conventional-changelog -p angular -i changelog.md -s
 
+      - name: Clean up changelog formatting
+        run: |
+          # Remove consecutive blank lines
+          sed -i '/^$/N;/^\n$/D' changelog.md
+
       - name: Check for changes in changelog.md
         id: check_changes
         run: |

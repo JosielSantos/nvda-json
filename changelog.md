@@ -1,11 +1,8 @@
 #  (2024-11-09)
 
-
 ### Bug Fixes
 
 * Show JSONPointer error ([d3a7b38](https://github.com/JosielSantos/nvda-json/commit/d3a7b38af5689a0848e250213c3472eb9875e32c))
-
-
 
 #  (2024-11-09)
 
