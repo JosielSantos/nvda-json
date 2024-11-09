@@ -1,5 +1,14 @@
 #  (2024-11-09)
 
+
+### Features
+
+* Add addon submenu on 'NVDA>tools' menu ([#16](https://github.com/JosielSantos/nvda-json/issues/16)) ([ed97a7f](https://github.com/JosielSantos/nvda-json/commit/ed97a7f6850ab78054e8132c605ee84ca8043584))
+
+
+
+#  (2024-11-09)
+
 #  (2024-11-09)
 
 ### Features
