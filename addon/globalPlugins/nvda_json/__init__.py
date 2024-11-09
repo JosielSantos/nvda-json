@@ -8,12 +8,24 @@ import gui
 import textInfos
 import treeInterceptorHandler
 import ui
+import wx
+
 from .json_dialog import JsonDialog
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def __init__(self):
         super(GlobalPlugin, self).__init__()
         self.jsonDialog = None
+        self.setupMenu()
+
+    def setupMenu(self):
+        self.menu = wx.Menu()
+        tools_menu = gui.mainFrame.sysTrayIcon.toolsMenu
+        for item in self.__features:
+            menu_item = self.menu.Append(wx.ID_ANY, item['title'], item['description'])
+            item_handler = getattr(self, ('script_' + item['script']))
+            gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, item_handler, menu_item)
+        self.json_menu = tools_menu.AppendSubMenu(self.menu, "JSON", "NVDA JSON")
 
     def terminate(self):
         try:
@@ -55,8 +67,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         else:
             return info.text
 
-
+    __features = [
+        {
+            'shortcut': 'kb:nvda+j',
+            'script': 'format_json_from_selected_text_or_clipboard',
+            'title': 'Query and format single JSON entry',
+            'description': 'Parse a single JSON entry',
+        },
+        {
+            'shortcut': 'kb:nvda+shift+j',
+            'script': 'format_multiple_jsons_from_selected_text_or_clipboard',
+            'title': 'Query and format multiple JSON entries',
+            'description': 'Parses multiple JSON strings (onne per line)',
+        },
+    ]
     __gestures = {
-        'kb:nvda+j': 'format_json_from_selected_text_or_clipboard',
-        'kb:nvda+shift+j': 'format_multiple_jsons_from_selected_text_or_clipboard',
+        feature['shortcut']: feature['script']
+        for feature in __features
+        if feature.get('shortcut') is not None
     }
