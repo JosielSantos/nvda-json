@@ -1,10 +1,9 @@
 #  (2024-11-09)
 
-#  (2024-11-09)
-
 ### Features
 
-* Add addon submenu on 'NVDA>tools' menu ([3d6f2c5](https://github.com/JosielSantos/nvda-json/commit/3d6f2c54c4ebfe478752b87e65e92f7eb71e5d48))
+* Add addon submenu on 'NVDA>tools' menu ([#16](https://github.com/JosielSantos/nvda-json/issues/16)) ([ed97a7f](https://github.com/JosielSantos/nvda-json/commit/ed97a7f6850ab78054e8132c605ee84ca8043584))
+* String transformations using JSONPointer syntax ([515826b](https://github.com/JosielSantos/nvda-json/commit/515826b3a266449a1cfd8951b43673f4fb4e7ce3))
 
 #  (2024-11-08)
 
