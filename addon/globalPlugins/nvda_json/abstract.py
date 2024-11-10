@@ -44,6 +44,7 @@ class JsonManipulatorDialog(wx.Dialog):
             ui.message('Copied')
         else:
             ui.message('Error when copying')
+
     def on_key(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
             self.Close()
@@ -52,6 +53,12 @@ class JsonManipulatorDialog(wx.Dialog):
 
     def set_output(self, output):
         self.output.SetValue(output if output is not None else '')
+
+    def exit_with_error(self, message):
+        wx.CallAfter(
+            lambda: gui.messageBox(message, 'Error', wx.OK | wx.ICON_ERROR)
+        )
+        self.Destroy()
 
     def parse_text(self, text, multi):
         if multi:
@@ -78,12 +85,6 @@ class JsonManipulatorDialog(wx.Dialog):
             ui.message('No JSONs to display')
         return self.format_json(parsed_jsons_list)
 
-    def exit_with_error(self, message):
-        wx.CallAfter(
-            lambda: gui.messageBox(message, 'Error', wx.OK | wx.ICON_ERROR)
-        )
-        self.Destroy()
-
     def format_json(self, parsed_json):
         return json.dumps(
             parsed_json,
@@ -91,6 +92,3 @@ class JsonManipulatorDialog(wx.Dialog):
             indent=4,
             sort_keys=True
         )
-
-    def onClose(self, evt):
-        self.Destroy()

@@ -8,6 +8,7 @@ import gui
 import textInfos
 import treeInterceptorHandler
 import ui
+
 import wx
 
 from .json_query_dialog import JsonQueryDialog
@@ -17,9 +18,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def __init__(self):
         super(GlobalPlugin, self).__init__()
         self.dialogs = []
-        self.setupMenu()
+        self.create_features_menu()
 
-    def setupMenu(self):
+    def create_features_menu(self):
         self.menu = wx.Menu()
         tools_menu = gui.mainFrame.sysTrayIcon.toolsMenu
         for item in self.__features:
