@@ -16,18 +16,21 @@ jobs:
     steps:
 
     - uses: actions/checkout@v4
-    - run: echo -e "pre-commit\nscons\nmarkdown">requirements.txt
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: 3.11
         cache: 'pip'
+        cache-dependency-path: |
+          requirements-dev.txt
+          requirements.txt
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip wheel
-        pip install -r requirements.txt
+        pip install -r requirements.txt -t addon/modules --platform=win32 --only-binary=:all:
+        pip install -r requirements-dev.txt
         sudo apt-get update  -y
         sudo apt-get install -y gettext
 

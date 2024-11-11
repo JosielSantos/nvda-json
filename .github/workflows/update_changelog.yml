@@ -5,10 +5,11 @@ on:
     branches-ignore:
       - main
     paths-ignore:
-      - ".addon/modules/"
       - ".vscode/"
       - "changelog.md"
       - "readme.md"
+      - "requirements-dev.txt"
+      - "requirements.txt"
 
 jobs:
   generate_changelog:

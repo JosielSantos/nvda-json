@@ -1,0 +1,2 @@
+jsonpath_ng>=1.6.1,<2.0.0
+jsonpointer>=3.0.0,<4.0.0
