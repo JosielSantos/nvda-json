@@ -22,7 +22,7 @@ class JsonQueryDialog(JsonManipulatorDialog):
             data = json.loads(self.parse_text(self.text, self.multi))
             matches = [match.value for match in jsonpath.find(data)]
             if matches:
-                matches = matches[0] if len(matches) == 1 else matches
+                matches = matches[0] if (len(matches) == 1 and isinstance(matches[0], list)) else matches
                 self.set_output(self.format_json(matches))
             else:
                 ui.message('No matches found')

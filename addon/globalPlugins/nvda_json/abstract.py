@@ -11,9 +11,9 @@ class JsonManipulatorDialog(wx.Dialog):
 
     def __init__(self, parent, text, title = 'NVDA JSON'):
         super(JsonManipulatorDialog, self).__init__(parent, title = title)
-        self.text = text
+        self.text = text.strip()
         self.create_ui()
-        self.original_text.SetValue(text)
+        self.original_text.SetValue(self.text)
 
     def create_ui(self):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -85,9 +85,9 @@ class JsonManipulatorDialog(wx.Dialog):
             ui.message('No JSONs to display')
         return self.format_json(parsed_jsons_list)
 
-    def format_json(self, parsed_json):
+    def format_json(self, data):
         return json.dumps(
-            parsed_json,
+            data,
             ensure_ascii = False,
             indent=4,
             sort_keys=True
