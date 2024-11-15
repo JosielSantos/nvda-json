@@ -29,7 +29,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip wheel
-        pip install -r requirements.txt -t addon/modules --platform=win32 --only-binary=:all:
+        pip install -r requirements.txt -t addon/modules --platform=win32 --python-version=3.11 --only-binary=:all:
         pip install -r requirements-dev.txt
         sudo apt-get update  -y
         sudo apt-get install -y gettext
