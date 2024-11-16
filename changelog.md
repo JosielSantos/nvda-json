@@ -1,10 +1,8 @@
-#  (2024-11-15)
+#  (2024-11-16)
 
 ### Features
 
-* Added JQ support
-  * Added setting panel to choose the query engine to use (JQ or JSONPath)
-  * Made JQ the default JSON query engine
+* Adds JQ support for JSON querying / transformation ([#22](https://github.com/JosielSantos/nvda-json/issues/22)) ([28025b1](https://github.com/JosielSantos/nvda-json/commit/28025b188cf8c2156477a4b7ea25f408768c9b4a))
 
 #  (2024-11-09)
 
