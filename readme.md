@@ -35,48 +35,64 @@ The formatted text will be displaied as follows:
 ]
 ```
 
-### JSONPath
+### JSON Filtering / Transformation
 
-Between the "original text" and the "output" is a "path expression" field.
-This field accepts a JSONPath expression.
-JSONPath is a syntax that allows filtering JSON items. You can write the
-expression and press enter to see the filtered result in the "output" field.
+This addon allows you to filter / transform JSON using JQ or JSONPath.
+By default JQ is used, but you can change this in the settings panel of NVDA.
 
-You can learn JSONPath in the [documentation](https://goessner.net/articles/JsonPath/)
+When you open the JSON dialog using "NVDA+j" or "NVDA+shift+j" you can see three text boxes: original text, query expression and output.
+You must use the second text field to filter / transform JSON. You type the query, press enter and check the result in the "output" text field.
 
-Let's discover this feature by example.
-
-Given these JSON lines:
+To test this feature you can use this fake log file:
 
 ```
-{"name": "Josiel", "gender": "male", "birth_date": "1995-07-03"}
-{"name": "Luzia", "gender": "female", "birth_date": "1945-03-19"}
-{"name": "PH", "gender": "male", "birth_date": "2004-03-18"}
+{"timestamp": "2024-11-07T14:12:45Z", "level": "INFO", "trace_id": "abc123", "span_id": "span789", "message": "User login successful"}
+{"timestamp": "2024-11-07T14:13:12Z", "level": "ERROR", "trace_id": "def456", "span_id": "span101", "message": "Failed to connect to database"}
+{"timestamp": "2024-11-07T14:15:30Z", "level": "DEBUG", "trace_id": "ghi789", "span_id": "span202", "message": "Fetching data from cache"}
+{"timestamp": "2024-11-07T14:17:02Z", "level": "WARN", "trace_id": "jkl012", "span_id": "span303", "message": "High memory usage detected"}
+{"timestamp": "2024-11-07T14:19:25Z", "level": "INFO", "trace_id": "mno345", "span_id": "span404", "message": "Background job started"}
+{"timestamp": "2024-11-07T14:21:58Z", "level": "ERROR", "trace_id": "pqr678", "span_id": "span505", "message": "Timeout while waiting for external API response"}
+{"timestamp": "2024-11-07T14:23:47Z", "level": "DEBUG", "trace_id": "stu901", "span_id": "span606", "message": "User profile data parsed successfully"}
+{"timestamp": "2024-11-07T14:25:15Z", "level": "WARN", "trace_id": "vwx234", "span_id": "span707", "message": "Deprecated API version called"}
+{"timestamp": "2024-11-07T14:27:33Z", "level": "INFO", "trace_id": "yzb567", "span_id": "span808", "message": "File uploaded successfully"}
+{"timestamp": "2024-11-07T14:29:09Z", "level": "ERROR", "trace_id": "cde890", "span_id": "span909", "message": "Null pointer exception encountered"}
 ```
 
-#### Get all people names
+#### JQ
 
-```
-$..name
-```
+JQ is like a programming language to filter and transform JSON data.
+Because of this flexibility, this is the default query engine used in this addon.
 
-#### Get only male people
+Example JQ programs:
 
-```
-$[?(@.gender == 'male')]
-```
+| description | query |
+| ----- | ----- |
+| GET the original JSON | `.` |
+| Extract all log messages | `.[].message` |
+| Get all INFO records | `.[] \| select(.level == "INFO")` |
+| Get an object containing only "timestamp" and "message" for WARN records | `.[] \| select(.level == "WARN") \| {timestamp, message}` |
+| Get timestamp of records that contains "cache" in the message | `.[] \| select(.message \| test("cache")) \| .timestamp` |
+| Get only "message" and "timestamp" field, grouped by level | `group_by(.level) \| map({(.[0].level): map({message: .message, timestamp: .timestamp})})` |
+| Get the first three records with DEBUG level | `.[] \| select(.level == "DEBUG") \| . \| limit(3;.)` |
+| Add a "is_critical=true" field to ERROR levels and false to others | `.[] \| .is_critical = (.level == "ERROR") \| .` |
+| Delete DEBUG records | `map(select(.level != "DEBUG"))` |
+| Sort records by timestamp, ascending | `sort_by(.timestamp)` |
 
-#### Get only young people (born before year 2000)
+#### JSONPath
 
-```
-$[?(@.birth_date > '2000-01-01')]
-```
+JSONPath is a syntax that allows filtering JSON items.
+You can learn it in the [documentation](https://goessner.net/articles/JsonPath/)
 
-#### Get the original JSON
+Example queries:
 
-```
-$
-```
+| description | query |
+| ----- | ----- |
+| Get the original JSON | `$` |
+| Extract all log messages | `$..message` |
+| Get records with level = ERROR | `$[?(@.level == 'ERROR')]` |
+| Extract the field "trace_id" of all INFO records | `$[?(@.level == 'INFO')].trace_id` |
+| Get all non-debug records | `$[?(@.level != 'DEBUG')]` |
+| Extract all logs before a timestamp | `$[?(@.timestamp > '2024-11-07T14:20:00Z')]` |
 
 ### String transformation with JSONPointer (NVDA+ctrl+j)
 
@@ -112,7 +128,8 @@ My name is Josiel, My mother is Maria and my favorite programming language is PH
 * [x] Parsing JSON from selected text (cursor)
 * [x] Parsing of multiple JSON strings (one per line)
 * [ ] Settings panel
-  * [ ] Configure scripts behaviour (take JSON only from selected text, only from clipboard or both (current))
+  * [x] Option to select the query engine to use
+  * [ ] Configure scripts behavior (take JSON only from selected text, only from clipboard or both (current))
 * [ ] Parsing JSON variants
   * [x] Original JSON using Python's json module
   * [ ] json5
@@ -120,6 +137,6 @@ My name is Josiel, My mother is Maria and my favorite programming language is PH
   * [x] Button to copy output to clipboard
   * [ ] JSON Filtering / transformation
     * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
-    * [ ] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
+    * [x] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
     * [ ] Save filters / transformations to avoid typing (program and description)
     * [x] String transformation using JSONPointer (https://datatracker.ietf.org/doc/html/rfc6901, https://github.com/stefankoegl/python-json-pointer?tab=readme-ov-file)

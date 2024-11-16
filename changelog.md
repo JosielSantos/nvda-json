@@ -1,3 +1,11 @@
+#  (2024-11-15)
+
+### Features
+
+* Added JQ support
+  * Added setting panel to choose the query engine to use (JQ or JSONPath)
+  * Made JQ the default JSON query engine
+
 #  (2024-11-09)
 
 ### Bug Fixes

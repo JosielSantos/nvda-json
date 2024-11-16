@@ -3,22 +3,31 @@ import sys
 sys.path.append(os.path.dirname(__file__)+'/../../modules')
 
 import api
+import config
 import globalPluginHandler
 import gui
 import textInfos
 import treeInterceptorHandler
 import ui
+from gui.settingsDialogs import NVDASettingsDialog
 
 import wx
 
 from .json_query_dialog import JsonQueryDialog
 from .json_template_dialog import JsonTemplateDialog
+from .settings_panel import SettingsPanel
+
+conf_spec = {
+    'query_engine': 'string(default=jq)',
+}
+config.conf.spec['json'] = conf_spec
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def __init__(self):
         super(GlobalPlugin, self).__init__()
         self.dialogs = []
         self.create_features_menu()
+        NVDASettingsDialog.categoryClasses.append(SettingsPanel)
 
     def create_features_menu(self):
         self.menu = wx.Menu()
