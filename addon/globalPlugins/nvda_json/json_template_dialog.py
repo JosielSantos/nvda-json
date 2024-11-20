@@ -10,6 +10,7 @@ from .abstract import JsonManipulatorDialog
 class JsonTemplateDialog(JsonManipulatorDialog):
     def __init__(self, parent, text):
         super(JsonTemplateDialog, self).__init__(parent, text, title = 'JSON template')
+        self.expression_type = 'jsonpointer-template'
         self.label_manipulation_expression.SetLabel('Template')
         self.original_text.SetValue(text)
 

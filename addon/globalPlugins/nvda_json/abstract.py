@@ -1,4 +1,5 @@
 import json
+import os.path
 
 import api
 import gui
@@ -6,14 +7,24 @@ import ui
 
 import wx
 
+SAVED_EXPRESSIONS_FILE_NAME = os.path.dirname(__file__)+'/../../../../json-expressions.json'
+
 class JsonManipulatorDialog(wx.Dialog):
     label_manipulation_expression = None
 
     def __init__(self, parent, text, title = 'NVDA JSON'):
         super(JsonManipulatorDialog, self).__init__(parent, title = title)
         self.text = text.strip()
+        self.load_saved_expressions()
         self.create_ui()
         self.original_text.SetValue(self.text)
+
+    def load_saved_expressions(self):
+        if not os.path.exists(SAVED_EXPRESSIONS_FILE_NAME):
+            self.saved_expressions = []
+        else:
+            with open(SAVED_EXPRESSIONS_FILE_NAME, 'r', encoding='utf-8') as file:
+                self.saved_expressions = json.load(file)
 
     def create_ui(self):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -37,6 +48,7 @@ class JsonManipulatorDialog(wx.Dialog):
         self.SetSizer(main_sizer)
         self.Bind(wx.EVT_CHAR_HOOK, self.on_key)
         self.manipulation_expression.Bind(wx.EVT_TEXT_ENTER, self.manipulate)
+        self.manipulation_expression.Bind(wx.EVT_KEY_DOWN, self.on_manipulation_expression_key_down)
 
     def on_copy_output_click(self, event):
         copied = api.copyToClip(self.output.GetValue())
@@ -50,6 +62,37 @@ class JsonManipulatorDialog(wx.Dialog):
             self.Close()
         else:
             event.Skip()
+
+    def on_manipulation_expression_key_down(self, event):
+        key_code = event.GetKeyCode()
+        if key_code == wx.WXK_RETURN and event.ControlDown():
+            try:
+                self.manipulate(event)
+            except Exception as e:
+                return
+            self.save_expression()
+        else:
+            event.Skip()
+
+    def save_expression(self):
+        expression = self.manipulation_expression.GetValue().strip()
+        if expression == '':
+            ui.message('Empty expression')
+            return
+        expression_exists = any(
+            saved['type'] == self.expression_type and saved['expression'] == expression
+            for saved in self.saved_expressions
+        )
+        if expression_exists:
+            ui.message('Query already exists')
+            return
+        self.saved_expressions.append({
+            'type': self.expression_type,
+            'expression': expression,
+        })
+        with open(SAVED_EXPRESSIONS_FILE_NAME, 'w', encoding='utf-8') as file:
+            json.dump(self.saved_expressions, file, ensure_ascii=False, indent=2)
+        ui.message('Query saved')
 
     def set_output(self, output):
         self.output.SetValue(output if output is not None else '')
