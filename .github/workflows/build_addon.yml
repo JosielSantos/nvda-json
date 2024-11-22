@@ -3,7 +3,7 @@ name: build addon
 on:
   push:
     tags: ["*"]
-    branches: [ main , master ]
+    branches: [ main , master, 'release-candidate/**' ]
 
   pull_request:
     branches: [ main, master ]
