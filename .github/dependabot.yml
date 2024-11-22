@@ -11,9 +11,6 @@ updates:
           - minor
           - patch
     commit-message:
-      prefix: chore
-      include: scope
-    commit-message:
       prefix: ci
       include: scope
 
