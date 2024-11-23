@@ -1,9 +1,8 @@
-#  (2024-11-20)
+#  (2024-11-23)
 
 ### Features
 
-* Adds JQ support for JSON querying / transformation ([#22](https://github.com/JosielSantos/nvda-json/issues/22)) ([81daec2](https://github.com/JosielSantos/nvda-json/commit/81daec2a9067376a39d2120b462baa4671639888))
-* Execute and save JSON manipulation expression into a file when pressing CTRL+enter in the expression field ([6400a73](https://github.com/JosielSantos/nvda-json/commit/6400a73517cd605d9d1ada68665b3fb92e8b96d7))
+* Save queries for later use when pressing ctrl+enter in the expression field ([#23](https://github.com/JosielSantos/nvda-json/issues/23)) ([1e1dd0b](https://github.com/JosielSantos/nvda-json/commit/1e1dd0bcdb8eefcecca4a80b43d0d201e06ca92a))
 
 #  (2024-11-16)
 
