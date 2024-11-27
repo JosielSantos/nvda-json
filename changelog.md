@@ -2,6 +2,14 @@
 
 ### Features
 
+* Adds auto complete with saved queries ([#24](https://github.com/JosielSantos/nvda-json/issues/24)) ([c13c052](https://github.com/JosielSantos/nvda-json/commit/c13c0522756b2c0f6078798bf941e33ed02cc8f0))
+* Adds JQ support for JSON querying / transformation ([#22](https://github.com/JosielSantos/nvda-json/issues/22)) ([2dbec1f](https://github.com/JosielSantos/nvda-json/commit/2dbec1f951ef8e7a5186a5a271a0eb386e2e1b84))
+* Save queries for later use when pressing ctrl+enter ([#23](https://github.com/JosielSantos/nvda-json/issues/23)) ([efaef5f](https://github.com/JosielSantos/nvda-json/commit/efaef5f18ae28e587a9ff800e551d260551008ee))
+
+#  (2024-11-27)
+
+### Features
+
 * Adds auto complete with saved expressions ([d73ac60](https://github.com/JosielSantos/nvda-json/commit/d73ac6061ed06c28cb797f26dc96d0eb772902ad))
 * Delete saved query from autocomplete list by pressing the delete key ([76cfe9e](https://github.com/JosielSantos/nvda-json/commit/76cfe9e38279d201c6b1921ec685f4262b612d9c))
 
