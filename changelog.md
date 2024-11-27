@@ -1,3 +1,10 @@
+#  (2024-11-27)
+
+### Features
+
+* Adds auto complete with saved expressions ([d73ac60](https://github.com/JosielSantos/nvda-json/commit/d73ac6061ed06c28cb797f26dc96d0eb772902ad))
+* Delete saved query from autocomplete list by pressing the delete key ([76cfe9e](https://github.com/JosielSantos/nvda-json/commit/76cfe9e38279d201c6b1921ec685f4262b612d9c))
+
 #  (2024-11-23)
 
 ### Features

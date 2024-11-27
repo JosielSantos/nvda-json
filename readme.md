@@ -122,6 +122,20 @@ Output:
 My name is Josiel, My mother is Maria and my favorite programming language is PHP
 ```
 
+### Using autocomplete
+
+On expression edit field:
+
+* Press ctrl+enter to execute / save a query
+* Type part of expression
+* Use up / down arrow to access the suggestions list
+
+In the suggestions list:
+
+* Press enter to fill the edit field with the complete expression and execute it
+* Press backspace to delete the last character in the edit field and move focus back to it
+* Press delete to remove the saved expression
+
 ## Features (implemented and future)
 
 * [x] Parsing JSON from clipboard
@@ -135,8 +149,9 @@ My name is Josiel, My mother is Maria and my favorite programming language is PH
   * [ ] json5
 * [ ] Interactive JSON through a UI
   * [x] Button to copy output to clipboard
-  * [ ] JSON Filtering / transformation
+  * [x ] JSON Filtering / transformation
     * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
     * [x] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
-    * [ ] Save filters / transformations to avoid typing (program and description)
+    * [x] Save filters / transformations to avoid typing (program and description)
+    * [x] Autocomplete with saved queries
     * [x] String transformation using JSONPointer (https://datatracker.ietf.org/doc/html/rfc6901, https://github.com/stefankoegl/python-json-pointer?tab=readme-ov-file)
