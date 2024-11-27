@@ -12,6 +12,18 @@ class AutoCompleteEnterEvent(wx.PyCommandEvent):
         return self._value
 
 
+EVT_AUTOCOMPLETE_DELETE_TYPE = wx.NewEventType()
+EVT_AUTOCOMPLETE_DELETE = wx.PyEventBinder(EVT_AUTOCOMPLETE_DELETE_TYPE, 1)
+
+class AutoCompleteDeleteEvent(wx.PyCommandEvent):
+    def __init__(self, event_type, event_id, value):
+        super().__init__(event_type, event_id)
+        self._value = value
+
+    def GetValue(self):
+        return self._value
+
+
 class AutoCompleteTextCtrl(wx.TextCtrl):
     def __init__(self, parent, choices, *args, **kwargs):
         super(AutoCompleteTextCtrl, self).__init__(parent, *args, **kwargs)
@@ -23,7 +35,7 @@ class AutoCompleteTextCtrl(wx.TextCtrl):
     def on_text_change(self, event):
         text = self.GetValue()
         if text:
-            matches = [choice for choice in self.choices if text.lower() in choice.lower()]
+            matches = [item for item in self.choices if text.lower() in item.lower()]
             if matches:
                 self.show_listbox(matches)
             else:
@@ -58,31 +70,35 @@ class AutoCompleteTextCtrl(wx.TextCtrl):
             self.listbox.Hide()
 
     def on_listbox_key_down(self, event):
-        if event.GetKeyCode() == wx.WXK_RETURN:
-            if self.listbox.GetSelection() != wx.NOT_FOUND:
-                value = self.listbox.GetStringSelection()
-                self.SetValue(value)
-                self.SetInsertionPointEnd()
-                autocomplete_event = AutoCompleteEnterEvent(EVT_AUTOCOMPLETE_ENTER_TYPE, self.GetId(), value)
-                wx.PostEvent(self.GetEventHandler(), autocomplete_event)
-            self.hide_listbox()
-        elif event.GetKeyCode() == wx.WXK_ESCAPE:
-            self.SetFocus()
-            self.hide_listbox()
-        elif event.GetKeyCode() == wx.WXK_BACK:
-            self.delete_last_char()
-            self.SetFocus()
-        elif event.GetKeyCode() == wx.WXK_UP:
-            if self.listbox.GetSelection() == 0:
-                self.SetFocus()
-                self.listbox.SetSelection(wx.NOT_FOUND)
-        elif event.GetKeyCode() == wx.WXK_DOWN:
-            if self.listbox.GetSelection() == self.listbox.GetCount() - 1:
-                self.SetFocus()
-                self.listbox.SetSelection(wx.NOT_FOUND)
+        key = event.GetKeyCode()
+        if key == wx.WXK_RETURN:
+            self.handle_listbox_enter_key()
+        elif key == wx.WXK_ESCAPE:
+            self.handle_listbox_escape_key()
+        elif key == wx.WXK_BACK:
+            self.handle_listbox_backspace_key()
+        elif key == wx.WXK_DELETE:
+            self.handle_listbox_delete_key()
+        elif key == wx.WXK_UP:
+            self.handle_listbox_up_key()
+        elif key == wx.WXK_DOWN:
+            self.handle_listbox_down_key()
         event.Skip()
 
-    def delete_last_char(self):
+    def handle_listbox_enter_key(self):
+        if self.listbox.GetSelection() != wx.NOT_FOUND:
+            value = self.listbox.GetStringSelection()
+            self.SetValue(value)
+            self.SetInsertionPointEnd()
+            autocomplete_event = AutoCompleteEnterEvent(EVT_AUTOCOMPLETE_ENTER_TYPE, self.GetId(), value)
+            wx.PostEvent(self.GetEventHandler(), autocomplete_event)
+            self.hide_listbox()
+
+    def handle_listbox_escape_key(self):
+        self.SetFocus()
+        self.hide_listbox()
+
+    def handle_listbox_backspace_key(self):
         text = self.GetValue()
         if text:
             self.SetValue(text[:-1])
@@ -90,6 +106,28 @@ class AutoCompleteTextCtrl(wx.TextCtrl):
             text_event = wx.CommandEvent(wx.wxEVT_TEXT, self.GetId())
             text_event.SetString(self.GetValue())
             wx.PostEvent(self.GetEventHandler(), text_event)
+            self.SetFocus()
+
+    def handle_listbox_delete_key(self):
+        if self.listbox.GetSelection() != wx.NOT_FOUND:
+            selected_value = self.listbox.GetStringSelection()
+            self.choices.remove(selected_value)
+            self.listbox.Set(self.choices)
+            delete_event = AutoCompleteDeleteEvent(EVT_AUTOCOMPLETE_DELETE_TYPE, self.GetId(), selected_value)
+            wx.PostEvent(self.GetEventHandler(), delete_event)
+            if not self.choices:
+                self.hide_listbox()
+                self.SetFocus()
+
+    def handle_listbox_up_key(self):
+        if self.listbox.GetSelection() == 0:
+            self.SetFocus()
+            self.listbox.SetSelection(wx.NOT_FOUND)
+
+    def handle_listbox_down_key(self):
+        if self.listbox.GetSelection() == self.listbox.GetCount() - 1:
+            self.SetFocus()
+            self.listbox.SetSelection(wx.NOT_FOUND)
 
     def set_choices(self, choices):
         self.choices = choices
