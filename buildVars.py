@@ -26,7 +26,7 @@ addon_info = {
         "addon_description": _("""JSON utilities for NVDA
 """),
         # version
-        "addon_version": "1.2.1",
+        "addon_version": "2.0.0",
         # Author(s)
         "addon_author": "Josiel Santos <josiel.lkp@gmail.com>",
         # URL for the add-on documentation support
@@ -77,7 +77,9 @@ baseLanguage = "en"
 # If you need to add support for markup such as tables, fill out the below list.
 # Extensions string must be of the form "markdown.extensions.extensionName"
 # e.g. "markdown.extensions.tables" to add tables.
-markdownExtensions = []
+markdownExtensions = [
+    'markdown.extensions.tables',
+]
 
 # Custom braille translation tables
 # If your add-on includes custom braille tables (most will not), fill out this dictionary.
