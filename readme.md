@@ -149,7 +149,7 @@ In the suggestions list:
   * [ ] json5
 * [ ] Interactive JSON through a UI
   * [x] Button to copy output to clipboard
-  * [x ] JSON Filtering / transformation
+  * [x] JSON Filtering / transformation
     * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
     * [x] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
     * [x] Save filters / transformations to avoid typing (program and description)
