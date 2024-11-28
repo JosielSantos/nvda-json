@@ -4,18 +4,20 @@ import os.path
 import api
 import gui
 import ui
-
 import wx
 
-from .gui_components import EVT_AUTOCOMPLETE_DELETE, EVT_AUTOCOMPLETE_ENTER, AutoCompleteTextCtrl
+from .gui_components import AutoCompleteTextCtrl
+from .gui_components import EVT_AUTOCOMPLETE_DELETE
+from .gui_components import EVT_AUTOCOMPLETE_ENTER
 
-SAVED_EXPRESSIONS_FILE_NAME = os.path.dirname(__file__)+'/../../../../json-expressions.json'
+SAVED_EXPRESSIONS_FILE_NAME = os.path.dirname(__file__) + '/../../../../json-expressions.json'
+
 
 class JsonManipulatorDialog(wx.Dialog):
     label_manipulation_expression = None
 
-    def __init__(self, parent, text, title = 'NVDA JSON'):
-        super(JsonManipulatorDialog, self).__init__(parent, title = title)
+    def __init__(self, parent, text, title='NVDA JSON'):
+        super().__init__(parent, title=title)
         self.text = text.strip()
         self.load_saved_expressions()
         self.create_ui()
@@ -25,18 +27,18 @@ class JsonManipulatorDialog(wx.Dialog):
         if not os.path.exists(SAVED_EXPRESSIONS_FILE_NAME):
             self.saved_expressions = []
         else:
-            with open(SAVED_EXPRESSIONS_FILE_NAME, 'r', encoding='utf-8') as file:
+            with open(SAVED_EXPRESSIONS_FILE_NAME, encoding='utf-8') as file:
                 self.saved_expressions = json.load(file)
 
     def create_ui(self):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         json_sizer = wx.BoxSizer(wx.VERTICAL)
-        label_original_text = wx.StaticText(self, label = 'Original text')
+        label_original_text = wx.StaticText(self, label='Original text')
         self.original_text = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
         json_sizer.Add(label_original_text)
         json_sizer.Add(self.original_text, 1, wx.EXPAND | wx.ALL, 5)
         self.label_manipulation_expression = wx.StaticText(self)
-        self.manipulation_expression = AutoCompleteTextCtrl(self, choices = self.get_auto_complete_choices(), style=wx.TE_LEFT)
+        self.manipulation_expression = AutoCompleteTextCtrl(self, choices=self.get_auto_complete_choices(), style=wx.TE_LEFT)
         json_sizer.Add(self.label_manipulation_expression)
         json_sizer.Add(self.manipulation_expression, 0, wx.EXPAND | wx.ALL, 5)
         label_output = wx.StaticText(self, label='Output')
@@ -73,7 +75,7 @@ class JsonManipulatorDialog(wx.Dialog):
             try:
                 self.manipulate(event)
                 self.output.SetFocus()
-            except Exception as e:
+            except Exception:
                 return
             if event.ControlDown():
                 self.save_expression()
@@ -88,8 +90,8 @@ class JsonManipulatorDialog(wx.Dialog):
     def on_manipulation_expression_delete(self, event):
         expression = event.GetValue()
         self.saved_expressions = [
-        item for item in self.saved_expressions
-        if not (item['expression'] == expression and item['type'] == self.expression_type)
+            item for item in self.saved_expressions
+            if not (item['expression'] == expression and item['type'] == self.expression_type)
         ]
         self.save_expressions_file()
         self.manipulation_expression.set_choices(self.get_auto_complete_choices())
@@ -154,7 +156,9 @@ class JsonManipulatorDialog(wx.Dialog):
             try:
                 parsed_jsons_list.append(json.loads(line))
             except json.decoder.JSONDecodeError as error:
-                return self.exit_with_error('Invalid JSON at line %d: %s' % (line_number + 1, error))
+                return self.exit_with_error(
+                    'Invalid JSON at line %d: %s' % (line_number + 1, error)
+                )
         if parsed_jsons_list == []:
             ui.message('No JSONs to display')
         return self.format_json(parsed_jsons_list)
@@ -162,7 +166,7 @@ class JsonManipulatorDialog(wx.Dialog):
     def format_json(self, data):
         return json.dumps(
             data,
-            ensure_ascii = False,
+            ensure_ascii=False,
             indent=4,
             sort_keys=True
         )

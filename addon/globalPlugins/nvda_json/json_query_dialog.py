@@ -1,14 +1,12 @@
 import json
 
 import config
+import jq
+import jsonpath_ng.ext
 import ui
 
-import jsonpath_ng
-import jsonpath_ng.ext
-import jq
-import wx
-
 from .abstract import JsonManipulatorDialog
+
 
 class JsonQueryDialog(JsonManipulatorDialog):
     query_engines = {
@@ -27,7 +25,7 @@ class JsonQueryDialog(JsonManipulatorDialog):
     def __init__(self, parent, text, multi):
         self.query_engine = JsonQueryDialog.query_engines[config.conf['json']['query_engine']]
         self.expression_type = self.query_engine['type']
-        super(JsonQueryDialog, self).__init__(parent, text, title = 'JSON Query')
+        super().__init__(parent, text, title='JSON Query')
         self.label_manipulation_expression.SetLabel(self.query_engine['edit_label'])
         self.multi = multi
         self.set_output(self.parse_text(self.text, self.multi))

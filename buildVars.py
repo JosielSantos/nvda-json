@@ -1,53 +1,48 @@
-# -*- coding: UTF-8 -*-
-
 # Build customizations
 # Change this file instead of sconstruct or manifest files, whenever possible.
-
-
 # Since some strings in `addon_info` are translatable,
 # we need to include them in the .po files.
 # Gettext recognizes only strings given as parameters to the `_` function.
 # To avoid initializing translations in this module we simply roll our own "fake" `_` function
 # which returns whatever is given to it as an argument.
 def _(arg):
-        return arg
+    return arg
 
 
 # Add-on information variables
 addon_info = {
-        # add-on Name/identifier, internal for NVDA
-        "addon_name": "nvda-json",
-        # Add-on summary, usually the user visible name of the addon.
-        # Translators: Summary for this add-on
-        # to be shown on installation and add-on information found in Add-ons Manager.
-        "addon_summary": _("NVDA JSON"),
-        # Add-on description
-        # Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-        "addon_description": _("""JSON utilities for NVDA
+    # add-on Name/identifier, internal for NVDA
+    "addon_name": "nvda-json",
+    # Add-on summary, usually the user visible name of the addon.
+    # Translators: Summary for this add-on
+    # to be shown on installation and add-on information found in Add-ons Manager.
+    "addon_summary": _("NVDA JSON"),
+    # Add-on description
+    # Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+    "addon_description": _("""JSON utilities for NVDA
 """),
-        # version
-        "addon_version": "2.0.0",
-        # Author(s)
-        "addon_author": "Josiel Santos <josiel.lkp@gmail.com>",
-        # URL for the add-on documentation support
-        "addon_docFileName": "readme.html",
-        # URL for the add-on repository where the source code can be found
-        "addon_url": "https://github.com/JosielSantos/nvda-json",
-        "addon_sourceURL": "https://github.com/JosielSantos/nvda-json",
-        # Documentation file name
-        "addon_docFileName": "readme.html",
-        # Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
-        "addon_minimumNVDAVersion": "2019.3.0",
-        # Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-        "addon_lastTestedNVDAVersion": "2024.1.0",
-        # Add-on update channel (default is None, denoting stable releases,
-        # and for development releases, use "dev".)
-        # Do not change unless you know what you are doing!
-        "addon_updateChannel": None,
-        # Add-on license such as GPL 2
-        "addon_license": None,
-        # URL for the license document the ad-on is licensed under
-        "addon_licenseURL": None,
+    # version
+    "addon_version": "2.0.0",
+    # Author(s)
+    "addon_author": "Josiel Santos <josiel.lkp@gmail.com>",
+    # URL for the add-on documentation support
+    "addon_url": "https://github.com/JosielSantos/nvda-json",
+    # URL for the add-on repository where the source code can be found
+    "addon_sourceURL": "https://github.com/JosielSantos/nvda-json",
+    # Documentation file name
+    "addon_docFileName": "readme.html",
+    # Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
+    "addon_minimumNVDAVersion": "2019.3.0",
+    # Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
+    "addon_lastTestedNVDAVersion": "2024.1.0",
+    # Add-on update channel (default is None, denoting stable releases,
+    # and for development releases, use "dev".)
+    # Do not change unless you know what you are doing!
+    "addon_updateChannel": None,
+    # Add-on license such as GPL 2
+    "addon_license": None,
+    # URL for the license document the ad-on is licensed under
+    "addon_licenseURL": None,
 }
 
 # Define the python files that are the sources of your add-on.

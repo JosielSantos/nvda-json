@@ -1,6 +1,5 @@
 import os
 import sys
-sys.path.append(os.path.dirname(__file__)+'/../../modules')
 
 import api
 import config
@@ -8,13 +7,9 @@ import globalPluginHandler
 import gui
 import textInfos
 import treeInterceptorHandler
-import ui
+import wx
 from gui.settingsDialogs import NVDASettingsDialog
 
-import wx
-
-from .json_query_dialog import JsonQueryDialog
-from .json_template_dialog import JsonTemplateDialog
 from .settings_panel import SettingsPanel
 
 conf_spec = {
@@ -22,9 +17,11 @@ conf_spec = {
 }
 config.conf.spec['json'] = conf_spec
 
+
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def __init__(self):
-        super(GlobalPlugin, self).__init__()
+        super().__init__()
+        sys.path.append(os.path.dirname(__file__) + '/../../modules')
         self.dialogs = []
         self.create_features_menu()
         NVDASettingsDialog.categoryClasses.append(SettingsPanel)
@@ -33,10 +30,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.menu = wx.Menu()
         tools_menu = gui.mainFrame.sysTrayIcon.toolsMenu
         for item in self.__features:
-            menu_item = self.menu.Append(wx.ID_ANY, item['title'], item['description'])
+            menu_item = self.menu.Append(
+                wx.ID_ANY, item['title'], item['description'])
             item_handler = getattr(self, ('script_' + item['script']))
             gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, item_handler, menu_item)
-        self.json_menu = tools_menu.AppendSubMenu(self.menu, "JSON", "NVDA JSON")
+        self.json_menu = tools_menu.AppendSubMenu(self.menu, 'JSON', 'NVDA JSON')
 
     def terminate(self):
         for dialog in self.dialogs:
@@ -51,13 +49,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def script_format_json_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
+        from .json_query_dialog import JsonQueryDialog
         self.show_dialog(JsonQueryDialog(gui.mainFrame, text, False))
 
     def script_format_multiple_jsons_from_selected_text_or_clipboard(self, gesture):
         text = self.__get_text()
+        from .json_query_dialog import JsonQueryDialog
         self.show_dialog(JsonQueryDialog(gui.mainFrame, text, True))
 
     def script_json_template(self, gesture):
+        from .json_template_dialog import JsonTemplateDialog
         text = self.__get_text()
         self.show_dialog(JsonTemplateDialog(gui.mainFrame, text))
 

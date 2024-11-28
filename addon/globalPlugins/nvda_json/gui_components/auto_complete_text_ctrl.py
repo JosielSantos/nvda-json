@@ -3,6 +3,7 @@ import wx
 EVT_AUTOCOMPLETE_ENTER_TYPE = wx.NewEventType()
 EVT_AUTOCOMPLETE_ENTER = wx.PyEventBinder(EVT_AUTOCOMPLETE_ENTER_TYPE, 1)
 
+
 class AutoCompleteEnterEvent(wx.PyCommandEvent):
     def __init__(self, event_type, event_id, value):
         super().__init__(event_type, event_id)
@@ -15,6 +16,7 @@ class AutoCompleteEnterEvent(wx.PyCommandEvent):
 EVT_AUTOCOMPLETE_DELETE_TYPE = wx.NewEventType()
 EVT_AUTOCOMPLETE_DELETE = wx.PyEventBinder(EVT_AUTOCOMPLETE_DELETE_TYPE, 1)
 
+
 class AutoCompleteDeleteEvent(wx.PyCommandEvent):
     def __init__(self, event_type, event_id, value):
         super().__init__(event_type, event_id)
@@ -26,7 +28,7 @@ class AutoCompleteDeleteEvent(wx.PyCommandEvent):
 
 class AutoCompleteTextCtrl(wx.TextCtrl):
     def __init__(self, parent, choices, *args, **kwargs):
-        super(AutoCompleteTextCtrl, self).__init__(parent, *args, **kwargs)
+        super().__init__(parent, *args, **kwargs)
         self.choices = choices
         self.listbox = None
         self.Bind(wx.EVT_TEXT, self.on_text_change)
@@ -35,7 +37,10 @@ class AutoCompleteTextCtrl(wx.TextCtrl):
     def on_text_change(self, event):
         text = self.GetValue()
         if text:
-            matches = [item for item in self.choices if text.lower() in item.lower()]
+            matches = [
+                item for item in self.choices
+                if text.lower() in item.lower()
+            ]
             if matches:
                 self.show_listbox(matches)
             else:

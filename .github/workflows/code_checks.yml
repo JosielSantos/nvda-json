@@ -29,4 +29,4 @@ jobs:
         pip install -r requirements-dev.txt
 
     - name: Code checks
-      run: export SKIP=no-commit-to-branch; pre-commit run --all
+      run: export SKIP=no-commit-to-branch; pre-commit run --all-files --show-diff-on-failure
