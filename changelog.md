@@ -1,3 +1,9 @@
+#  (2024-11-28)
+
+### Bug Fixes
+
+* Add plugin scripts to NVDA commands editor ([7dc5ac9](https://github.com/JosielSantos/nvda-json/commit/7dc5ac926d619690b473ea147c84135635ce5b18))
+
 #  (2024-11-27)
 
 ### Features

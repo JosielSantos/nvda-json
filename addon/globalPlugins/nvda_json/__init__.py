@@ -1,5 +1,6 @@
 import os
 import sys
+import types
 
 import api
 import config
@@ -9,6 +10,7 @@ import textInfos
 import treeInterceptorHandler
 import wx
 from gui.settingsDialogs import NVDASettingsDialog
+from scriptHandler import script
 
 from .settings_panel import SettingsPanel
 
@@ -19,10 +21,37 @@ config.conf.spec['json'] = conf_spec
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
+    __features = [
+        {
+            'title': 'Query and format single JSON entry',
+            'description': 'Parse a single JSON entry',
+            'shortcut': 'kb:nvda+j',
+            'script': 'format_json_from_selected_text_or_clipboard',
+        },
+        {
+            'title': 'Query and format multiple JSON entries',
+            'description': 'Parses multiple JSON strings (onne per line)',
+            'shortcut': 'kb:nvda+shift+j',
+            'script': 'format_multiple_jsons_from_selected_text_or_clipboard',
+        },
+        {
+            'title': 'String transformation with JSONPointer',
+            'description': 'Create strings using JSONPointer syntax',
+            'shortcut': 'kb:nvda+control+j',
+            'script': 'json_template',
+        },
+    ]
+    __gestures = {
+        feature['shortcut']: feature['script']
+        for feature in __features
+        if feature.get('shortcut') is not None
+    }
+
     def __init__(self):
         super().__init__()
         sys.path.append(os.path.dirname(__file__) + '/../../modules')
         self.dialogs = []
+        self.__create_scripts()
         self.create_features_menu()
         NVDASettingsDialog.categoryClasses.append(SettingsPanel)
 
@@ -87,28 +116,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         else:
             return info.text
 
-    __features = [
-        {
-            'title': 'Query and format single JSON entry',
-            'description': 'Parse a single JSON entry',
-            'shortcut': 'kb:nvda+j',
-            'script': 'format_json_from_selected_text_or_clipboard',
-        },
-        {
-            'title': 'Query and format multiple JSON entries',
-            'description': 'Parses multiple JSON strings (onne per line)',
-            'shortcut': 'kb:nvda+shift+j',
-            'script': 'format_multiple_jsons_from_selected_text_or_clipboard',
-        },
-        {
-            'title': 'String transformation with JSONPointer',
-            'description': 'Create strings using JSONPointer syntax',
-            'shortcut': 'kb:nvda+control+j',
-            'script': 'json_template',
-        },
-    ]
-    __gestures = {
-        feature['shortcut']: feature['script']
-        for feature in __features
-        if feature.get('shortcut') is not None
-    }
+    def __create_scripts(self):
+        for feature in self.__features:
+            script_name = 'script_' + feature['script']
+            original_method = getattr(self, script_name)
+            decorated_function = script(
+                category='JSON',
+                description=feature['description'],
+            )(original_method.__func__)
+            setattr(self, script_name, types.MethodType(decorated_function, self))
