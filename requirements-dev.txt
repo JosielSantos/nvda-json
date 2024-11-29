@@ -1,3 +1,4 @@
 scons
 markdown
+pymdown-extensions
 pre-commit

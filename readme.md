@@ -142,16 +142,16 @@ In the suggestions list:
 * [x] Parsing JSON from selected text (cursor)
 * [x] Parsing of multiple JSON strings (one per line)
 * [ ] Settings panel
-  * [x] Option to select the query engine to use
-  * [ ] Configure scripts behavior (take JSON only from selected text, only from clipboard or both (current))
+    * [x] Option to select the query engine to use
+    * [ ] Configure scripts behavior (take JSON only from selected text, only from clipboard or both (current))
 * [ ] Parsing JSON variants
-  * [x] Original JSON using Python's json module
-  * [ ] json5
+    * [x] Original JSON using Python's json module
+    * [ ] json5
 * [ ] Interactive JSON through a UI
-  * [x] Button to copy output to clipboard
-  * [x] JSON Filtering / transformation
-    * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
-    * [x] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
-    * [x] Save filters / transformations to avoid typing (program and description)
-    * [x] Autocomplete with saved queries
-    * [x] String transformation using JSONPointer (https://datatracker.ietf.org/doc/html/rfc6901, https://github.com/stefankoegl/python-json-pointer?tab=readme-ov-file)
+    * [x] Button to copy output to clipboard
+    * [x] JSON Filtering / transformation
+        * [x] With JSONPath (https://goessner.net/articles/JsonPath/, https://github.com/h2non/jsonpath-ng)
+        * [x] With JQ (https://jqlang.github.io/jq/, https://github.com/mwilliamson/jq.py)
+        * [x] Save filters / transformations to avoid typing (program and description)
+        * [x] Autocomplete with saved queries
+        * [x] String transformation using JSONPointer (https://datatracker.ietf.org/doc/html/rfc6901, https://github.com/stefankoegl/python-json-pointer?tab=readme-ov-file)

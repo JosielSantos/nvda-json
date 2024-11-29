@@ -74,6 +74,7 @@ baseLanguage = "en"
 # e.g. "markdown.extensions.tables" to add tables.
 markdownExtensions = [
     'markdown.extensions.tables',
+    'pymdownx.tasklist',
 ]
 
 # Custom braille translation tables
