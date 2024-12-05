@@ -8,6 +8,7 @@ import globalPluginHandler
 import gui
 import textInfos
 import treeInterceptorHandler
+import ui
 import wx
 from gui.settingsDialogs import NVDASettingsDialog
 from scriptHandler import script
@@ -77,18 +78,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             pass
 
     def script_format_json_from_selected_text_or_clipboard(self, gesture):
-        text = self.__get_text()
+        text = self.__get_text().strip()
+        if text == '':
+            ui.message('No text to process')
+            return
         from .json_query_dialog import JsonQueryDialog
         self.show_dialog(JsonQueryDialog(gui.mainFrame, text, False))
 
     def script_format_multiple_jsons_from_selected_text_or_clipboard(self, gesture):
-        text = self.__get_text()
+        text = self.__get_text().strip()
+        if text == '':
+            ui.message('No text to process')
+            return
         from .json_query_dialog import JsonQueryDialog
         self.show_dialog(JsonQueryDialog(gui.mainFrame, text, True))
 
     def script_json_template(self, gesture):
+        text = self.__get_text().strip()
+        if text == '':
+            ui.message('No text to process')
+            return
         from .json_template_dialog import JsonTemplateDialog
-        text = self.__get_text()
         self.show_dialog(JsonTemplateDialog(gui.mainFrame, text))
 
     def show_dialog(self, dialog):
@@ -99,7 +109,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             gui.mainFrame.postPopup()
 
     def __get_text(self):
-        return self.__get_selected_text() or api.getClipData()
+        try:
+            return self.__get_selected_text() or api.getClipData()
+        except OSError:
+            return ''
 
     def __get_selected_text(self):
         # Code adapted from script_reportCurrentSelection on the NVDA source code
