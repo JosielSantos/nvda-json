@@ -1,3 +1,9 @@
+#  (2024-12-05)
+
+### Bug Fixes
+
+* Do not try to process empty text ([05bff86](https://github.com/JosielSantos/nvda-json/commit/05bff8652c38caad18edfc36937020dbfa6f7ab9))
+
 #  (2024-11-28)
 
 ### Bug Fixes
